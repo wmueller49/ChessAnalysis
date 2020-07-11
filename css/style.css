@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+
+html{
+	font-family: 'Open Sans', sans-serif;
+}
+
+i{
+	font-size: 2em;
+}
+
+i:hover{
+	cursor: pointer;
+}
+
+.icon-bar {
+  width: 100%;
+  overflow: auto;
+}
+
+.icon-bar a {
+  float: left;
+  width: 10%;
+  text-align: center;
+  padding: 6px 0;
+  transition: all 0.3s ease;
+  margin: 5px;
+}
+
+.icon-bar a:hover {
+  background-color: lightgray;
+  cursor: pointer;
+}
+
+.active {
+  background-color: #4CAF50;
+}
+
+
+#gameTitle{
+   -moz-user-select: -moz-none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+
+
+   -ms-user-select: none;
+   user-select: none;
+}
+
+p{
+	margin-top: none;
+	padding-top: none;
+	padding-left: 1em;
+	font-weight: bold;
+}
+
+input{
+	margin-left: 5em;
+}

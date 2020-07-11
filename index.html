@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	  <meta charset="utf-8" />
+	  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	  <title>Chess Analysis</title>
+	  <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css" integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU" crossorigin="anonymous">
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	  <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js" integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD" crossorigin="anonymous"></script>
+	  <script src="js/chess.js"></script>
+	  <script src="js/script.js"></script>
+	  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+	  <link rel="stylesheet" href="css/style.css">
+	</head>
+
+	<body onload="findGame()" onerror="catchError()">
+		<div id="myBoard" style="width: 600px; margin: auto"></div>
+		<div style="margin:auto">
+			<h1 id="gameTitle" style="text-align: center">Finding game...</h1>
+		</div>
+
+		<div class="icon-bar">
+			<a><i class="fas fa-info-circle" id="infoButton" onclick="showInfo()"></i></a>
+			<a><i class="fas fa-search" id="searchButton" onclick="createSearch()"></i></a>
+			<a><i class="far fa-star" id="saveButton" onclick="saveGame()"></i></a>
+		</div>
+
+		<div class="info-bar" id="infoBar">
+			<p id="eventParagraph"></p>
+			<p id="locationParagraph"></p>
+			<p id="dateParagraph"></p>
+			<p id="idParagraph"></p>
+		</div>
+
+		<script>
+			const searchButton = document.getElementById("searchButton");
+			const infoButton = document.getElementById("infoButton");
+			const saveButton = document.getElementById("saveButton");
+
+			searchButton.addEventListener("mousedown", e=>{
+				searchButton.style.marginTop = "3px";
+			});
+
+			searchButton.addEventListener("mouseup", e=>{
+				searchButton.style.marginTop = "0px";
+			})
+
+			infoButton.addEventListener("mousedown", e=>{
+				infoButton.style.marginTop = "3px";
+			});
+
+			infoButton.addEventListener("mouseup", e=>{
+				infoButton.style.marginTop = "0px";
+			})
+
+			saveButton.addEventListener("mousedown", e=>{
+				saveButton.style.marginTop = "3px";
+			});
+
+			saveButton.addEventListener("mouseup", e=>{
+				saveButton.style.marginTop = "0px";
+			})
+
+			var isSaved = false;
+
+			function saveGame(){
+
+
+				if(!isSaved){
+					isSaved = true;
+					saveButton.className = "fas fa-star";
+					saveButton.style.color = "#9ACD32";
+				}
+				else{
+					saveButton.className = "far fa-star";
+					saveButton.style.color = "black";
+					isSaved = false;
+				}
+			}
+
+			var isShown = false;
+
+			function showInfo(){
+
+				if(hasBar){
+					createSearch();
+				}
+
+				if(!isShown){
+					isShown = true;
+
+					var playerInfo = "";
+
+					var eventInfo = pgn[0];
+					eventInfo = eventInfo.replace("[", "");
+					eventInfo = eventInfo.replace("]", "");
+					eventInfo = eventInfo.replace("Event", "");
+					eventInfo = eventInfo.replace("\"", "");
+					eventInfo = eventInfo.replace("\"", "");
+
+					var locationInfo = pgn[1];
+					locationInfo = locationInfo.replace("[", "");
+					locationInfo = locationInfo.replace("]", "");
+					locationInfo = locationInfo.replace("Site", "");
+					locationInfo = locationInfo.replace("\"", "");
+					locationInfo = locationInfo.replace("\"", "");
+
+					var dateInfo = pgn[2];
+					dateInfo = dateInfo.replace("[", "");
+					dateInfo = dateInfo.replace("]", "");
+					dateInfo = dateInfo.replace("Date", "");
+					dateInfo = dateInfo.replace("\"", "");
+					dateInfo = dateInfo.replace("\"", "");
+
+
+					var gameNumInfo = "Game ID: " + gameId;
+
+					document.getElementById("eventParagraph").innerHTML = "Event: " + eventInfo;
+					document.getElementById("locationParagraph").innerHTML = "Location: " +  locationInfo;
+					document.getElementById("dateParagraph").innerHTML = "Date: " +  dateInfo;
+					document.getElementById("idParagraph").innerHTML = gameNumInfo;
+				}
+				else{
+					isShown = false;
+					document.getElementById("eventParagraph").innerHTML = "";
+					document.getElementById("locationParagraph").innerHTML = "";
+					document.getElementById("dateParagraph").innerHTML = "";
+					document.getElementById("idParagraph").innerHTML = "";
+				}
+
+			}
+
+			var hasBar = false;
+
+			function createSearch(){
+				if(isShown){
+					showInfo();
+				}
+
+				if(!hasBar){
+					hasBar = true;
+					var searchBar = document.createElement("input");
+					searchBar.placeholder = "Game ID...";
+					searchBar.id = "searchInput";
+
+					var runSearchButton = document.createElement("button");
+					runSearchButton.innerHTML = "Search";
+					runSearchButton.id = "runSearchButton";
+
+
+					document.getElementById("infoBar").appendChild(searchBar);
+					document.getElementById("infoBar").appendChild(runSearchButton);
+
+					runSearchButton.addEventListener('click', function(e){
+						gameId = searchBar.value;
+						document.getElementById("gameTitle").innerHTML = "Searching...";
+						findGame();
+					});
+
+					searchBar.addEventListener('keypress', function(e){
+						if(e.key === 'Enter'){
+							gameId = searchBar.value;
+							document.getElementById("gameTitle").innerHTML = "Searching...";
+							findGame();
+						}
+					});
+				}
+				else{
+					var element1 = document.getElementById("searchInput");
+					element1.parentNode.removeChild(element1);
+
+					var element2 = document.getElementById("runSearchButton");
+					element2.parentNode.removeChild(element2);
+					hasBar = false;
+				}
+			}
+
+			function catchError(){
+				window.alert("Error loading game, try refreshing the page");
+			}
+
+			const chess = new Chess();
+			var board = Chessboard('myBoard', 'start');
+
+			var gameId = "1";
+			var randNum = 10
+			var pgn = null;
+
+			function findGame(){
+				if(!(gameId.length > 1)){
+
+					for(var i = 0; i < 6; i++){
+
+						var nextNum = "" + Math.floor(Math.random()*randNum);
+
+						if(nextNum == 9 && i == 1)
+						{
+							if(gameId == "19"){
+								randNum = 8;
+							}
+						}
+
+						if(nextNum == 8 && i == 2){
+							if(gameId == "199"){
+								randNum = 3;
+							}
+						}
+
+						if(gameId == "199833"){
+							nextNum = "0";
+						}
+						gameId += nextNum;
+					}
+				}
+
+				var randomUrl = "https://www.chessgames.com/perl/nph-chesspgn?text=1&gid=" + gameId;
+
+				var url = "https://cors-anywhere.herokuapp.com/" +  randomUrl + "&callback=?";
+
+				$.get(url, null, function(response){
+					pgn = response.split(/\r?\n/);
+
+					var white = pgn[6];
+					white = white.replace("[", "");
+					white = white.replace("]", "");
+					white = white.replace("\"", "");
+					white = white.replace("\"", "");
+					white = white.replace("White", "");
+
+					var black = pgn[7];
+					black = black.replace("[", "");
+					black = black.replace("]", "");
+					black = black.replace("\"", "");
+					black = black.replace("\"", "");
+					black = black.replace("Black", "");
+
+					document.getElementById("gameTitle").innerHTML = white + " vs. " + black;
+					chess.load_pgn(pgn.join('\n'));
+					var pos = chess.fen();
+					
+					board.position(pos);
+				}, "html");
+			}
+			
+		</script>
+	</body>
+</html>
