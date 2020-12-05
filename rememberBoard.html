@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	  <meta charset="utf-8" />
+	  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	  <title>Chess Analysis</title>
+	  <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css" integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU" crossorigin="anonymous">
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	  <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js" integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD" crossorigin="anonymous"></script>
+	  <script src="js/chess.js"></script>
+	  <script src="js/script.js"></script>
+	  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+	  <link rel="stylesheet" href="css/style.css">
+	</head>
+
+	<body>
+
+		<style>
+			.container {
+			  height: 50px;
+			  position: relative;
+			  padding: 2em;
+			  margin-top: 2em;
+			}
+
+			.center {
+			  margin: 0;
+			  position: absolute;
+			  top: 50%;
+			  left: 50%;
+			  -ms-transform: translate(-50%, -50%);
+			  transform: translate(-50%, -50%);
+			}
+		</style>
+
+		<br><br>
+
+		<div id="startBoard"  style="width: 600px; margin: auto"></div>
+		<div id="solveBoard" style="width: 600px; margin: auto; display: none"></div>
+
+		<div class="container">
+		  <div class="center">
+		  	<button id="startButton" class="button" onclick="runTimer()">Start</button>
+		  	<button id="checkButton" class="button" onclick="checkAnswer()" style="display: none">Check</button>
+		  	<h1 id="timer" style="text-align: center" onclick="changeTimer()">01:00</h1>
+		  </div>
+		</div>
+
+
+		<script>
+			const chess = new Chess();
+
+			var config = {
+				draggable: true,
+				dropOffBoard: 'trash',
+				sparePieces: true
+			}
+
+			var board = Chessboard('startBoard', 'clear');
+
+			var solutionBoard = Chessboard('solveBoard', config);
+
+			var games = [
+				"br3r1k/p5b1/8/1p2pPB1/2p5/P6P/2B3PK/1R3N2",
+				"br1q1rk1/p3p1bp/6p1/1p1n2B1/2pPB3/P1P4P/2Q2PP1/1R1R1NK1",
+				"r3r3/1p1n2bk/1n1pb1pp/pPp2p2/P1P1P2q/R3BN1P/5PP1/1NQ1RBK1"
+			];
+
+
+			var interval = 1000; // ms
+			var expected = Date.now() + interval;
+			setTimeout(step, interval);
+
+			var startTime = 60;
+			var timerIsRunning = false;
+
+			function runTimer(){
+			  document.getElementById("startButton").style.display = "none";
+			  document.getElementById("timer").style.pointerEvents = "none";
+			  timerIsRunning = true; 
+			  var game = games[Math.floor(Math.random() * games.length)];
+
+			  board.position(game);
+			}
+
+			function changeTimer(){
+				startTime = prompt("How much time would you like (in seconds)?", "30");
+				if(startTime != null){
+					if(startTime < 10){
+			          document.getElementById("timer").innerHTML = "00:0" + startTime;
+			        }
+			        else if(startTime >= 60){
+			          var min = Math.floor(startTime / 60);
+			          var seconds = startTime % 60;
+			          if(seconds < 10){
+			          		document.getElementById("timer").innerHTML = "0" + min + ":0" + seconds;
+			          }
+			          else{
+			          	document.getElementById("timer").innerHTML = "0" + min + ":" + seconds;
+			          }
+			        }
+			        else{
+			         	document.getElementById("timer").innerHTML = "00:" + startTime;
+			        }
+				}
+			}
+
+			function checkAnswer(){
+				if(board.fen() === solutionBoard.fen()){
+					alert("Correct!");
+				}
+				else{
+					alert("Incorrect :(")
+				}
+			}
+
+			function step() {
+			    var dt = Date.now() - expected; // the drift (positive for overshooting)
+			    if (dt > interval) {
+			        // something really bad happened. Maybe the browser (tab) was inactive?
+			        // possibly special handling to avoid futile "catch up" run
+			    }
+
+			    if(timerIsRunning){
+			      if(startTime < 0){
+			        document.getElementById("startBoard").style.display= "none";
+			        document.getElementById("solveBoard").style.display = "block";	
+
+			        document.getElementById("timer").style.display = "none";   
+			        document.getElementById("checkButton").style.display = "block"; 
+			        timerIsRunning = false;    
+			      }
+			      else{
+			        if(startTime < 10){
+			          document.getElementById("timer").innerHTML = "00:0" + startTime;
+			        }
+			        else if(startTime >= 60){
+			          var min = Math.floor(startTime / 60);
+			          var seconds = startTime % 60;
+			          if(seconds < 10){
+			          		document.getElementById("timer").innerHTML = "0" + min + ":0" + seconds;
+			          }
+			          else{
+			          	document.getElementById("timer").innerHTML = "0" + min + ":" + seconds;
+			          }
+
+			        }
+			        else{
+			          document.getElementById("timer").innerHTML = "00:" + startTime;
+			        }
+			        startTime--;
+			      }
+			    }
+
+			    expected += interval;
+			    setTimeout(step, Math.max(0, interval - dt)); // take into account drift
+			}
+		</script>
+	</body>
+</html>
