@@ -13,14 +13,14 @@
 	  <link rel="stylesheet" href="css/style.css">
 	</head>
 
-	<body onload="findGame()" onerror="catchError()">
-		<h1 id="timer" style="text-align: center; visibility: hidden"></h1>
+	<body>
 
 		<style>
 			.container {
 			  height: 50px;
 			  position: relative;
-			  margin-bottom: none; 
+			  padding: 2em;
+			  margin-top: 2em;
 			}
 
 			.center {
@@ -33,241 +33,190 @@
 			}
 		</style>
 
+		<div id="startBoard"  style="width: 600px; margin: auto"></div>
+		<div id="solveBoard" style="width: 600px; margin: auto; display: none"></div>
+
 		<div class="container">
-		  <div class="center">
-		    <button id="startButton" onclick="runTimer()">Start</button>
+		  <div class="center" style="padding: auto; margin: auto">
+		  	<button id="startButton" class="button" onclick="runTimer()" style="display:inline">Start</button>
+		  	<h1 id="timer" style="text-align: center" onclick="changeTimer()">01:00</h1>
+		  	<div id="solveDiv" style="display:none; margin: 0; padding: 0">
+		  		<button id="checkButton" class="button" onclick="checkAnswer()" style="display: inline">Check</button>
+		  		<button id="solutionButton" class="button" onclick="showSolution()" style="display: inline; pointer-events: none">See Solution</button>
+		  		<button id="resetButton" class="button" onclick="resetBoard()" style="display: inline">Reset</button>
+			</div>
+
 		  </div>
 		</div>
 
-		<div id="myBoard" style="width: 600px; margin: auto"></div>
-		<div style="margin:auto">
-			<h1 id="gameTitle" style="text-align: center">Finding game...</h1>
-		</div>
-
-		<div class="icon-bar">
-			<a><i class="fas fa-info-circle" id="infoButton" onclick="showInfo()"></i></a>
-			<a><i class="fas fa-search" id="searchButton" onclick="createSearch()"></i></a>
-			<a><i class="far fa-star" id="saveButton" onclick="saveGame()"></i></a>
-		</div>
-
-		<div class="info-bar" id="infoBar">
-			<p id="eventParagraph"></p>
-			<p id="locationParagraph"></p>
-			<p id="dateParagraph"></p>
-			<p id="idParagraph"></p>
-		</div>
+		<div class="container" style="padding: 0; margin: 0">
+			<div class="center">
+			  	<i id="correctIcon" class="fas fa-check-circle"></i>
+			  	<h1 style="display: inline" id="correctText">0</h1>
+			  	<i class="fas fa-grip-lines-vertical"></i>
+			  	<i id="wrongIcon" class="fas fa-times-circle"></i>
+			  	<h1 style="display: inline" id="wrongText">0</h1>
+			</div>
+		</div>	
 
 
 		<script>
-			const searchButton = document.getElementById("searchButton");
-			const infoButton = document.getElementById("infoButton");
-			const saveButton = document.getElementById("saveButton");
-
-			searchButton.addEventListener("mousedown", e=>{
-				searchButton.style.marginTop = "3px";
-			});
-
-			searchButton.addEventListener("mouseup", e=>{
-				searchButton.style.marginTop = "0px";
-			})
-
-			infoButton.addEventListener("mousedown", e=>{
-				infoButton.style.marginTop = "3px";
-			});
-
-			infoButton.addEventListener("mouseup", e=>{
-				infoButton.style.marginTop = "0px";
-			})
-
-			saveButton.addEventListener("mousedown", e=>{
-				saveButton.style.marginTop = "3px";
-			});
-
-			saveButton.addEventListener("mouseup", e=>{
-				saveButton.style.marginTop = "0px";
-			})
-
-			var isSaved = false;
-
-			function saveGame(){
-
-
-				if(!isSaved){
-					isSaved = true;
-					saveButton.className = "fas fa-star";
-					saveButton.style.color = "#9ACD32";
-				}
-				else{
-					saveButton.className = "far fa-star";
-					saveButton.style.color = "black";
-					isSaved = false;
-				}
-			}
-
-			var isShown = false;
-
-			function showInfo(){
-
-				if(hasBar){
-					createSearch();
-				}
-
-				if(!isShown){
-					isShown = true;
-
-					var playerInfo = "";
-
-					var eventInfo = pgn[0];
-					eventInfo = eventInfo.replace("[", "");
-					eventInfo = eventInfo.replace("]", "");
-					eventInfo = eventInfo.replace("Event", "");
-					eventInfo = eventInfo.replace("\"", "");
-					eventInfo = eventInfo.replace("\"", "");
-
-					var locationInfo = pgn[1];
-					locationInfo = locationInfo.replace("[", "");
-					locationInfo = locationInfo.replace("]", "");
-					locationInfo = locationInfo.replace("Site", "");
-					locationInfo = locationInfo.replace("\"", "");
-					locationInfo = locationInfo.replace("\"", "");
-
-					var dateInfo = pgn[2];
-					dateInfo = dateInfo.replace("[", "");
-					dateInfo = dateInfo.replace("]", "");
-					dateInfo = dateInfo.replace("Date", "");
-					dateInfo = dateInfo.replace("\"", "");
-					dateInfo = dateInfo.replace("\"", "");
-
-
-					var gameNumInfo = "Game ID: " + gameId;
-
-					document.getElementById("eventParagraph").innerHTML = "Event: " + eventInfo;
-					document.getElementById("locationParagraph").innerHTML = "Location: " +  locationInfo;
-					document.getElementById("dateParagraph").innerHTML = "Date: " +  dateInfo;
-					document.getElementById("idParagraph").innerHTML = gameNumInfo;
-				}
-				else{
-					isShown = false;
-					document.getElementById("eventParagraph").innerHTML = "";
-					document.getElementById("locationParagraph").innerHTML = "";
-					document.getElementById("dateParagraph").innerHTML = "";
-					document.getElementById("idParagraph").innerHTML = "";
-				}
-
-			}
-
-			var hasBar = false;
-
-			function createSearch(){
-				if(isShown){
-					showInfo();
-				}
-
-				if(!hasBar){
-					hasBar = true;
-					var searchBar = document.createElement("input");
-					searchBar.placeholder = "Game ID...";
-					searchBar.id = "searchInput";
-
-					var runSearchButton = document.createElement("button");
-					runSearchButton.innerHTML = "Search";
-					runSearchButton.id = "runSearchButton";
-
-
-					document.getElementById("infoBar").appendChild(searchBar);
-					document.getElementById("infoBar").appendChild(runSearchButton);
-
-					runSearchButton.addEventListener('click', function(e){
-						gameId = searchBar.value;
-						document.getElementById("gameTitle").innerHTML = "Searching...";
-						findGame();
-					});
-
-					searchBar.addEventListener('keypress', function(e){
-						if(e.key === 'Enter'){
-							gameId = searchBar.value;
-							document.getElementById("gameTitle").innerHTML = "Searching...";
-							findGame();
-						}
-					});
-				}
-				else{
-					var element1 = document.getElementById("searchInput");
-					element1.parentNode.removeChild(element1);
-
-					var element2 = document.getElementById("runSearchButton");
-					element2.parentNode.removeChild(element2);
-					hasBar = false;
-				}
-			}
-
-			function catchError(){
-				window.alert("Error loading game, try refreshing the page");
-			}
-
 			const chess = new Chess();
-			var board = Chessboard('myBoard', 'start');
 
-			var gameId = "1";
-			var randNum = 10
-			var pgn = null;
+			var config = {
+				draggable: true,
+				dropOffBoard: 'trash',
+				sparePieces: true
+			}
 
-			function findGame(){
-				if(!(gameId.length > 1)){
+			var board = Chessboard('startBoard', 'clear');
 
-					for(var i = 0; i < 6; i++){
+			var solutionBoard = Chessboard('solveBoard', config);
 
-						var nextNum = "" + Math.floor(Math.random()*randNum);
+			var games = [
+				"br3r1k/p5b1/8/1p2pPB1/2p5/P6P/2B3PK/1R3N2",
+				"br1q1rk1/p3p1bp/6p1/1p1n2B1/2pPB3/P1P4P/2Q2PP1/1R1R1NK1",
+				"r3r3/1p1n2bk/1n1pb1pp/pPp2p2/P1P1P2q/R3BN1P/5PP1/1NQ1RBK1",
+				"7q/pppb1pk1/3p1ppr/2bPpP2/2B1P1Q1/2P2N2/P5PP/4R2K",
+				"2k5/p1q1bp2/Q1p1p2p/4P1pP/6P1/P7/KPP2P2/3R4",
+				"2r1r1k1/2p3pp/1pb5/2p1b1P1/5B2/p1P2PKP/PP1R4/2N2R2",
+				"6kr/pp4p1/1b4q1/1Pp1p3/2PnP3/4B1Pp/P6P/RQ4K1",
+				"8/3n1Bpk/r2b3p/2p5/2R3PP/4B3/1PK2P2/8",
+				"2R5/4rk1p/1p1ppb2/1P2Np2/1P2n1p1/4P1P1/rB3P1P/3RN1K1",
+				"3r2k1/p5pp/3N1n2/4p3/N2n4/Pr1p2PP/1P3PK1/3R1R2",
+				"4r1k1/p1pr2pp/1n1qNp2/3p1P2/3R4/1P5P/P4QP1/5R1K",
+				"2r2rk1/1q1nbpp1/ppb2n1p/4N3/1PPR1B2/P1N4P/2Q1BPP1/3R2K1",
+				"5r1k/1p1n3p/2NP1b2/6q1/5pp1/B7/5pPP/1R1QR1K1",
+				"4r2k/p6p/4PP2/6q1/2p4P/3p4/P5R1/7K",
+				"8/5p1p/8/3bkp1N/3n4/3K4/1P6/2R5",
+				"8/6pk/2b2p2/1nP2N1p/4P3/5PBP/6PK/8",
+				"8/p1RR1ppk/1p2p2p/8/8/1P4P1/P3qP1P/6K1"
+			];
 
-						if(nextNum == 9 && i == 1)
-						{
-							if(gameId == "19"){
-								randNum = 8;
-							}
-						}
+			var numCorrect = 0;
+			var numWrong = 0;
 
-						if(nextNum == 8 && i == 2){
-							if(gameId == "199"){
-								randNum = 3;
-							}
-						}
+			var interval = 1000; // ms
+			var expected = Date.now() + interval;
+			setTimeout(step, interval);
 
-						if(gameId == "199833"){
-							nextNum = "0";
-						}
-						gameId += nextNum;
-					}
+			var startTime = 60;
+			var oldStartTime = 0;
+			var timerIsRunning = false;
+
+			function runTimer(){
+			  document.getElementById("startButton").style.display = "none";
+			  document.getElementById("timer").style.pointerEvents = "none";
+			  timerIsRunning = true; 
+			  var game = games[Math.floor(Math.random() * games.length)];
+
+			  board.position(game);
+			}
+
+			function changeTimer(){
+				startTime = prompt("How much time would you like (in seconds)?", "60");
+				while(startTime < 0){
+					startTime = prompt("How much time would you like (in seconds)?", "60");
 				}
 
-				var randomUrl = "https://www.chessgames.com/perl/nph-chesspgn?text=1&gid=" + gameId;
-
-				var url = "https://cors-anywhere.herokuapp.com/" +  randomUrl + "&callback=?";
-
-				$.get(url, null, function(response){
-					pgn = response.split(/\r?\n/);
-
-					var white = pgn[6];
-					white = white.replace("[", "");
-					white = white.replace("]", "");
-					white = white.replace("\"", "");
-					white = white.replace("\"", "");
-					white = white.replace("White", "");
-
-					var black = pgn[7];
-					black = black.replace("[", "");
-					black = black.replace("]", "");
-					black = black.replace("\"", "");
-					black = black.replace("\"", "");
-					black = black.replace("Black", "");
-
-					document.getElementById("gameTitle").innerHTML = white + " vs. " + black;
-					chess.load_pgn(pgn.join('\n'));
-					var pos = chess.fen();
-					
-					board.position(pos);
-				}, "html");
+				oldStartTime = startTime;
+				if(startTime != null){
+					if(startTime < 10){
+			          document.getElementById("timer").innerHTML = "00:0" + startTime;
+			        }
+			        else if(startTime >= 60){
+			          var min = Math.floor(startTime / 60);
+			          var seconds = startTime % 60;
+			          if(seconds < 10){
+			          		document.getElementById("timer").innerHTML = "0" + min + ":0" + seconds;
+			          }
+			          else{
+			          	document.getElementById("timer").innerHTML = "0" + min + ":" + seconds;
+			          }
+			        }
+			        else{
+			         	document.getElementById("timer").innerHTML = "00:" + startTime;
+			        }
+				}
 			}
-			
+
+			function checkAnswer(){
+				document.getElementById("solutionButton").style.pointerEvents = "auto";
+				document.getElementById("checkButton").style.pointerEvents = "none";
+
+				if(board.fen() === solutionBoard.fen()){
+					numCorrect++;
+					document.getElementById("correctText").innerHTML = numCorrect;
+				}
+				else{
+					numWrong++;
+					document.getElementById("wrongText").innerHTML = numWrong;
+				}
+			}
+
+			function showSolution(){
+				document.getElementById("startBoard").style.display= "block";
+			    document.getElementById("solveBoard").style.display = "none";	
+			}
+
+			function resetBoard(){
+				board.clear();
+				solutionBoard.clear();
+				document.getElementById("startBoard").style.display= "block";
+			    document.getElementById("solveBoard").style.display = "none";	
+
+			    document.getElementById("startButton").style.display = "block";
+			  	document.getElementById("timer").style.pointerEvents = "auto";
+
+			    document.getElementById("timer").style.display = "block"; 
+			    document.getElementById("solveDiv").style.display = "none";  
+			    document.getElementById("solutionButton").style.pointerEvents = "none";
+			    document.getElementById("checkButton").style.pointerEvents = "auto";
+			}
+
+			function step() {
+			    var dt = Date.now() - expected; // the drift (positive for overshooting)
+			    if (dt > interval) {
+			        // something really bad happened. Maybe the browser (tab) was inactive?
+			        // possibly special handling to avoid futile "catch up" run
+			    }
+
+			    if(timerIsRunning){
+			      if(startTime < 0){
+			        document.getElementById("startBoard").style.display= "none";
+			        document.getElementById("solveBoard").style.display = "block";	
+
+			        document.getElementById("timer").style.display = "none"; 
+			        document.getElementById("solveDiv").style.display = "block";  
+
+			        timerIsRunning = false;  
+			        startTime = oldStartTime;  
+			      }
+			      else{
+			        if(startTime < 10){
+			          document.getElementById("timer").innerHTML = "00:0" + startTime;
+			        }
+			        else if(startTime >= 60){
+			          var min = Math.floor(startTime / 60);
+			          var seconds = startTime % 60;
+			          if(seconds < 10){
+			          		document.getElementById("timer").innerHTML = "0" + min + ":0" + seconds;
+			          }
+			          else{
+			          	document.getElementById("timer").innerHTML = "0" + min + ":" + seconds;
+			          }
+
+			        }
+			        else{
+			          document.getElementById("timer").innerHTML = "00:" + startTime;
+			        }
+			        startTime--;
+			      }
+			    }
+
+			    expected += interval;
+			    setTimeout(step, Math.max(0, interval - dt)); // take into account drift
+			}
 		</script>
 	</body>
 </html>

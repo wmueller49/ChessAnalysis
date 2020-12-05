@@ -6,10 +6,7 @@ html{
 
 i{
 	font-size: 2em;
-}
-
-i:hover{
-	cursor: pointer;
+  display: inline;
 }
 
 .icon-bar {
@@ -77,4 +74,12 @@ input{
 #timer:hover{
   color: #8080ff;
   cursor: pointer;
+}
+
+#correctIcon{
+  color:#4CAF50;
+}
+
+#wrongIcon{
+  color:red;
 }
