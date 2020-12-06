@@ -33,8 +33,8 @@
 			}
 		</style>
 
-		<div id="startBoard"  style="width: 600px; margin: auto"></div>
-		<div id="solveBoard" style="width: 600px; margin: auto; display: none"></div>
+		<div id="startBoard"  style="width: 500px; margin: auto"></div>
+		<div id="solveBoard" style="width: 500px; margin: auto; display: none"></div>
 
 		<div class="container">
 		  <div class="center" style="padding: auto; margin: auto">
@@ -58,6 +58,12 @@
 			  	<h1 style="display: inline" id="wrongText">0</h1>
 			</div>
 		</div>	
+		<div class="container" style="padding: 0; margin: 0">
+			<div class="center">
+				<i id="streakIcon" class="fas fa-fire"></i>
+				<h1 style="display: inline" id="streakText">0</h1>
+			</div>
+		</div>
 
 
 		<script>
@@ -95,6 +101,7 @@
 
 			var numCorrect = 0;
 			var numWrong = 0;
+			var numStreak = 0;
 
 			var interval = 1000; // ms
 			var expected = Date.now() + interval;
@@ -146,11 +153,15 @@
 
 				if(board.fen() === solutionBoard.fen()){
 					numCorrect++;
+					numStreak++;
 					document.getElementById("correctText").innerHTML = numCorrect;
+					document.getElementById("streakText").innerHTML = numStreak;
 				}
 				else{
 					numWrong++;
+					numStreak = 0;
 					document.getElementById("wrongText").innerHTML = numWrong;
+					document.getElementById("streakText").innerHTML = numStreak;
 				}
 			}
 
