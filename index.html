@@ -4,12 +4,17 @@
 	  <meta charset="utf-8" />
 	  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	  <title>Chess Analysis</title>
+	  <link rel="icon" href="img/chesspieces/wikipedia/bK.png">
 	  <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css" integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU" crossorigin="anonymous">
 	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	  <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js" integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD" crossorigin="anonymous"></script>
 	  <script src="js/chess.js"></script>
 	  <script src="js/script.js"></script>
 	  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 	  <link rel="stylesheet" href="css/style.css">
 	</head>
 
@@ -33,35 +38,95 @@
 			}
 		</style>
 
-		<div id="startBoard"  style="width: 500px; margin: auto"></div>
-		<div id="solveBoard" style="width: 500px; margin: auto; display: none"></div>
+		<nav class="navbar sticky-top navbar-dark bg-dark">
+			<ul>
+			  <li><a href="#">Login</a></li>
+			  <li><a href="" data-toggle="modal" data-target="#instructionsModal">Instructions</a></li>
+			</ul>
+		</nav>
 
-		<div class="container">
-		  <div class="center" style="padding: auto; margin: auto">
-		  	<button id="startButton" class="button" onclick="runTimer()" style="display:inline">Start</button>
-		  	<h1 id="timer" style="text-align: center" onclick="changeTimer()">01:00</h1>
-		  	<div id="solveDiv" style="display:none; margin: 0; padding: 0">
-		  		<button id="checkButton" class="button" onclick="checkAnswer()" style="display: inline">Check</button>
-		  		<button id="solutionButton" class="button" onclick="showSolution()" style="display: inline; pointer-events: none">See Solution</button>
-		  		<button id="resetButton" class="button" onclick="resetBoard()" style="display: inline">Reset</button>
-			</div>
-
+		<div class="modal fade" id="instructionsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLongTitle">Instructions</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		      	<p>1. Set your timer to your preferred duration</p>
+		      	<p>2. Observe a random position for that duration</p>
+		      	<p>3. Try to place the pieces back on the board to match the original position</p>
+		      	<p>4. Repeat as much as you want, and go for a really high streak! Good luck!</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
 		  </div>
 		</div>
 
-		<div class="container" style="padding: 0; margin: 0">
-			<div class="center">
-			  	<i id="correctIcon" class="fas fa-check-circle"></i>
-			  	<h1 style="display: inline" id="correctText">0</h1>
-			  	<i class="fas fa-grip-lines-vertical"></i>
-			  	<i id="wrongIcon" class="fas fa-times-circle"></i>
-			  	<h1 style="display: inline" id="wrongText">0</h1>
-			</div>
-		</div>	
-		<div class="container" style="padding: 0; margin: 0">
-			<div class="center">
-				<i id="streakIcon" class="fas fa-fire"></i>
-				<h1 style="display: inline" id="streakText">0</h1>
+		<div class="modal fade" id="timerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLabel">Timer</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <form>
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">Desired time (in seconds):</label>
+		            <textarea class="form-control" id="timerMessageText"></textarea>
+		          </div>
+		          <div class="form-group">
+		          	<label for="message-text" class="col-form-label">Quick Options:</label>
+		          	<button type="button" class="btn btn-primary" onclick="thirtyTimer()" data-dismiss="modal">00:30</button>
+		            <button type="button" class="btn btn-primary" onclick="sixtyTimer()" data-dismiss="modal">1:00</button>
+		            <button type="button" class="btn btn-primary" onclick="oneTwentyTimer()" data-dismiss="modal">2:00</button>
+		            <button type="button" class="btn btn-primary" onclick="threeHundredTimer()" data-dismiss="modal">5:00</button>
+		            <button type="button" class="btn btn-primary" onclick="sixHundredTimer()" data-dismiss="modal">10:00</button>
+		          </div>
+		        </form>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		        <button type="button" class="btn btn-primary" onclick="customSetTimer()" data-dismiss="modal">Set</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+
+
+
+		<div id="startBoard"  style="width: 550px; margin: auto; padding: 1em"></div>
+		<div id="solveBoard" style="width: 550px; display: none; margin: auto"></div>
+
+		<div class="container">
+			<div class="text-center">
+			  	<button id="startButton" class="button" style="margin: auto" onclick="runTimer()">Start</button>
+			  	<h1 id="timer" data-toggle="modal" data-target="#timerModal">01:00</h1>
+
+			  	<div id="solveDiv" style="display:none">
+			  		<button id="checkButton" class="button" onclick="checkAnswer()" style="display: inline">Check</button>
+			  		<button id="solutionButton" class="button" onclick="showSolution()" style="display: inline; pointer-events: none">See Solution</button>
+			  		<button id="resetButton" class="button" onclick="resetBoard()" style="display: inline">Reset</button>
+				</div>
+
+				<div>
+					<i id="streakIcon" class="fas fa-fire"></i>
+					<h1 style="display: inline" id="streakText">0</h1>
+					<i class="fas fa-grip-lines-vertical"></i>
+				  	<i id="correctIcon" class="fas fa-check-circle"></i>
+				  	<h1 style="display: inline" id="correctText">0</h1>
+				  	<i class="fas fa-grip-lines-vertical"></i>
+				  	<i id="wrongIcon" class="fas fa-times-circle"></i>
+				  	<h1 style="display: inline" id="wrongText">0</h1>
+				</div>
 			</div>
 		</div>
 
@@ -120,12 +185,42 @@
 			  board.position(game);
 			}
 
-			function changeTimer(){
-				startTime = prompt("How much time would you like (in seconds)?", "60");
-				while(startTime < 0){
-					startTime = prompt("How much time would you like (in seconds)?", "60");
-				}
+			function thirtyTimer(){
+				startTime = 30;
+				changeTimer();
+			}
 
+			function sixtyTimer(){
+				startTime = 60;
+				changeTimer();
+			}
+
+			function oneTwentyTimer(){
+				startTime = 120;
+				changeTimer();
+			}
+
+			function threeHundredTimer(){
+				startTime = 300;
+				changeTimer();
+			}
+
+			function sixHundredTimer(){
+				startTime = 600;
+				changeTimer();
+			}
+
+			function customSetTimer(){
+				startTime = $("#timerMessageText").val();
+				if(isNaN(startTime) || startTime < 0){
+					alert("Not a valid number. Try again");
+				}
+				else{
+					changeTimer();
+				}
+			}
+
+			function changeTimer(){
 				oldStartTime = startTime;
 				if(startTime != null){
 					if(startTime < 10){
@@ -134,8 +229,17 @@
 			        else if(startTime >= 60){
 			          var min = Math.floor(startTime / 60);
 			          var seconds = startTime % 60;
-			          if(seconds < 10){
-			          		document.getElementById("timer").innerHTML = "0" + min + ":0" + seconds;
+
+			          if(min >= 10){
+			          	if(seconds < 10){
+			          		document.getElementById("timer").innerHTML = min + ":0" + seconds;
+				        }
+				        else{
+				          	document.getElementById("timer").innerHTML = min + ":" + seconds;
+				        }
+			          }
+			          else if(seconds < 10){
+			          	document.getElementById("timer").innerHTML = "0" + min + ":0" + seconds;
 			          }
 			          else{
 			          	document.getElementById("timer").innerHTML = "0" + min + ":" + seconds;
@@ -183,6 +287,32 @@
 			    document.getElementById("solveDiv").style.display = "none";  
 			    document.getElementById("solutionButton").style.pointerEvents = "none";
 			    document.getElementById("checkButton").style.pointerEvents = "auto";
+
+			    if(oldStartTime < 10){
+		          document.getElementById("timer").innerHTML = "00:0" + oldStartTime;
+		        }
+		        else if(oldStartTime >= 60){
+		          var min = Math.floor(oldStartTime / 60);
+		          var seconds = oldStartTime % 60;
+		          if(min >= 10){
+		          	if(seconds < 10){
+		          		document.getElementById("timer").innerHTML = min + ":0" + seconds;
+			        }
+			        else{
+			          	document.getElementById("timer").innerHTML = min + ":" + seconds;
+			        }
+		          }
+		          else if(seconds < 10){
+		          		document.getElementById("timer").innerHTML = "0" + min + ":0" + seconds;
+		          }
+		          else{
+		          	document.getElementById("timer").innerHTML = "0" + min + ":" + seconds;
+		          }
+
+		        }
+		        else{
+		          document.getElementById("timer").innerHTML = "00:" + oldStartTime;
+		        }
 			}
 
 			function step() {
@@ -210,7 +340,15 @@
 			        else if(startTime >= 60){
 			          var min = Math.floor(startTime / 60);
 			          var seconds = startTime % 60;
-			          if(seconds < 10){
+			          if(min >= 10){
+			          	if(seconds < 10){
+			          		document.getElementById("timer").innerHTML = min + ":0" + seconds;
+				        }
+				        else{
+				          	document.getElementById("timer").innerHTML = min + ":" + seconds;
+				        }
+			          }
+			          else if(seconds < 10){
 			          		document.getElementById("timer").innerHTML = "0" + min + ":0" + seconds;
 			          }
 			          else{
