@@ -38,10 +38,11 @@
 			}
 		</style>
 
-		<nav class="navbar sticky-top navbar-dark bg-dark">
+		<nav class="navbar sticky-top navbar-custom">
 			<ul>
-			  <li><a href="#">Login</a></li>
+			  <!--<li><a href="#">Login</a></li>-->
 			  <li><a href="" data-toggle="modal" data-target="#instructionsModal">Instructions</a></li>
+			  <li><a href="#" onclick="darkMode()">Dark Mode</a></li>
 			</ul>
 		</nav>
 
@@ -55,9 +56,9 @@
 		        </button>
 		      </div>
 		      <div class="modal-body">
-		      	<p>1. Set your timer to your preferred duration</p>
-		      	<p>2. Observe a random position for that duration</p>
-		      	<p>3. Try to place the pieces back on the board to match the original position</p>
+		      	<p>1. Set your timer to your preferred duration.</p>
+		      	<p>2. Observe a random position for that duration.</p>
+		      	<p>3. Try to place the pieces back on the board to match the original position.</p>
 		      	<p>4. Repeat as much as you want, and go for a really high streak! Good luck!</p>
 		      </div>
 		      <div class="modal-footer">
@@ -132,6 +133,13 @@
 
 
 		<script>
+			function darkMode(){
+				var element = document.body;
+				element.classList.toggle("theme-switch");
+
+
+			}
+
 			const chess = new Chess();
 
 			var config = {
@@ -161,7 +169,45 @@
 				"4r2k/p6p/4PP2/6q1/2p4P/3p4/P5R1/7K",
 				"8/5p1p/8/3bkp1N/3n4/3K4/1P6/2R5",
 				"8/6pk/2b2p2/1nP2N1p/4P3/5PBP/6PK/8",
-				"8/p1RR1ppk/1p2p2p/8/8/1P4P1/P3qP1P/6K1"
+				"8/p1RR1ppk/1p2p2p/8/8/1P4P1/P3qP1P/6K1",
+				"1r2r1k1/1ppnqpbp/p2p1np1/8/2P5/1PN3P1/PBQ1PPBP/2R2RK1",
+				"2r3k1/3b1pp1/3B3p/2p5/p3R3/P2P2P1/2P4P/6K1",
+				"r1b1r1k1/1pq2pp1/p1p2nnp/P2pp3/4P3/2PP1NPP/1PQ2PB1/R3RNK1",
+				"2k1rbnr/pp4pp/2n5/2p5/2N1p3/5P2/PPN2KPP/R1B4R",
+				"r4rk1/b1p1qppp/p1pp1n2/8/1PP5/P1N1P1P1/1B3P1P/R2Q1RK1",
+				"rn1qk2r/pbpp1ppp/1p2pn2/8/1bPPP3/2NB4/PPQ2PPP/R1B1K1NR",
+				"r2qk3/pb3p2/4pr2/1ppP4/2p5/2N2nP1/PP1Q1PBP/R4RK1",
+				"r1bq1rk1/pp2ppbp/1n4p1/n2P4/8/1BN1BN2/PP3PPP/R2Q1RK1",
+				"8/1p1r2p1/p2b1kp1/2Bppb2/1P3n2/8/1P3PPP/R1R2BK1",
+				"r4rk1/1qRb3p/p2p1n2/1p1Pp1p1/4PpP1/P4P1P/1PQB4/2R2BK1",
+				"8/1pp1p1k1/3r1bp1/p2R2p1/P1K5/2P4P/1P3PP1/2B5",
+				"r2q1rk1/p3bppp/2np1n2/2p3N1/1p2PBb1/3B2N1/PPP2PPP/R2Q1RK1",
+				"N1bkr3/p2p1pbp/2nn2q1/2K3p1/Q2P1p2/2P2N2/PP4PP/R1B2B1R",
+				"1r1q1rk1/p4p1p/n4bp1/P1p1p3/2P5/2P2NP1/4QPBP/R4RK1",
+				"8/8/5p1k/4q2p/P4p1P/5P2/3Q3K/8",
+				"4rr1k/1ppb2p1/1p3nqp/3Ppp2/8/1B1P2NP/PP3QP1/R4RK1",
+				"3r4/8/5bk1/1Pnbp2p/R1N4P/2P3B1/7K/4N3",
+				"6r1/4b2k/2b1npq1/1p2p2p/nPp1P1PP/2P1B1PN/6NK/1BQ3R1",
+				"r1b2rk1/p3bppp/q1pp1n2/2p1p3/4PP2/2NPB2P/PPPN2P1/1R1Q1RK1",
+				"2b3k1/r3bqpr/2p1p1Q1/2p1Pp2/NpPp1P2/1P1P1N2/P5RP/6RK",
+				"3b1k2/q3r1pp/3NRp2/3Pp3/p3P3/5Q1P/2P2PP1/6K1",
+				"r1b1r3/ppp3pk/2nN1q1p/5p2/4P1n1/1QPP4/PP1BB1PP/RN2K2R",
+				"8/8/1ppbbkpp/p1n1p3/2P1P1P1/1PBN1K1P/P7/5B2",
+				"rr4k1/p4pbp/2pq1np1/3pn3/8/1QN1P2P/PP2BPP1/R1B2RK1",
+				"4rk1r/ppp2p2/2n4p/3p1Pq1/3P2p1/2PB1pPb/PP3K1P/R1Q2N1R",
+				"3rr1k1/1p2qppp/p1p5/4p3/4P3/P2R4/1PPQ1PPP/3R2K1",
+				"r1bq1rk1/pp2n1bp/2p2pp1/3p2B1/4P3/2PB1N2/PP3PPP/R2QR1K1",
+				"8/1K3k2/p4p2/P3p2P/3nP1P1/5P2/3B4/8",
+				"8/8/2p5/7p/8/4k2r/2P5/3K1R2",
+				"5r2/1p6/2p1k2p/3p2p1/1P1KPr2/1R3PRP/2P5/8",
+				"r1q2rk1/p3bppb/3p1n1p/1pnPp3/4P1P1/2N3NP/PP2QPB1/R1B1K2R",
+				"3r4/1r5p/3pk1p1/p1p5/P1P1P3/2K4P/3R2P1/3R4",
+				"r6b/3r3p/1n1pk1p1/pNp1n3/P3P3/1PB4P/1N2K1P1/1R1R4",
+				"3rr1k1/5qbp/1Np1b3/p1Ppp1p1/4np2/BP5P/P3BPP1/1RQ2RK1",
+				"4rk2/pp1R2pp/2p1n2r/4Pq2/2B1R3/5P1P/PP1Q2PK/8",
+				"r1r5/pq1bpnkp/1p1p2p1/3P4/3B1P2/1P5P/P2QB1P1/2R2RK1",
+				"2r2r2/6k1/p2R1np1/1p2p3/6N1/1Pn4P/P1P3B1/2R3K1",
+				"2nr4/1p1r1pkp/4p1p1/2q5/2Pp4/1P3B1P/P2RQPP1/3R2K1"
 			];
 
 			var numCorrect = 0;

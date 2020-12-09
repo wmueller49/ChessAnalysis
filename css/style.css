@@ -1,37 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
 
+:root{
+  --background: white;
+  --text: black;
+  --taskbarBackground: #343a40;
+  --taskbarText: white;
+  --taskbarHover: darkgray;
+}
+
 html{
 	font-family: 'Open Sans', sans-serif;
+}
+
+body{
+  background-color: var(--background);
+  color: var(--text);
 }
 
 i{
 	font-size: 2em;
   display: inline;
 }
-
-.icon-bar {
-  width: 100%;
-  overflow: auto;
-}
-
-.icon-bar a {
-  float: left;
-  width: 10%;
-  text-align: center;
-  padding: 6px 0;
-  transition: all 0.3s ease;
-  margin: 5px;
-}
-
-.icon-bar a:hover {
-  background-color: lightgray;
-  cursor: pointer;
-}
-
-.active {
-  background-color: #4CAF50;
-}
-
 
 #gameTitle{
    -moz-user-select: -moz-none;
@@ -88,6 +77,11 @@ input{
   color: #e25822;
 }
 
+.navbar-custom{
+  background-color: var(--taskbarBackground);
+  color: var(--taskbarText);
+}
+
 ul {
   list-style-type: none;
   margin: 0;
@@ -102,14 +96,14 @@ li {
 
 li a {
   display: block;
-  color: white;
+  color: var(--taskbarText);
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
 }
 
 li a:hover {
-  color: darkgray;
+  color: var(--taskbarHover);
   text-decoration: none;
 }
 
@@ -118,3 +112,26 @@ p{
   padding: 0em;
 }
 
+.theme-switch{
+  --background: #343a40;
+  --text: white;
+  --taskbarBackground: #004d66;
+  --taskbarText: white;
+  --taskbarHover: lightgray;
+}
+
+#instructionsModal{
+  color: var(--text);
+}
+
+#timerModal{
+  color: var(--text);
+}
+
+.modal-header{
+  background-color: var(--background);
+}
+
+.modal-body{
+  background-color: var(--background);
+}
