@@ -124,17 +124,16 @@
 		</div>
 
 
-		<div class="container">
+		<div class="container-fluid">
 		  <div class="row">
 		    <div class="col">
 		    </div>
 		    <div class="col-6">
-		      <div id="startBoard"  style="width: 100%; max-width: 100%;margin: auto; padding: 1em"></div>
-		      <div id="solveBoard" style="width: 75%; max-width: 100%; display: none; margin: auto"></div>
+		      <div id="startBoard"  style="width: 75%; max-width: 100%;margin: auto; padding: 1em"></div>
+		      <div id="solveBoard" style="width: 65%; max-width: 100%; display: none; margin: auto"></div>
 		    </div>
-		    <div class="col h-100 justify-content-center align-items-center">
-		      <br><br><br><br><br><br><br><br>
-		      <div class="text-center">
+		    <div class="col">
+		      <div class="text-center" style="padding-top: 60%">
 			  	<button id="startButton" class="button" style="margin: auto" onclick="runTimer()">Start</button>
 			  	<h1 id="timer" data-toggle="modal" data-target="#timerModal">01:00</h1>
 
@@ -161,21 +160,8 @@
 		  </div>
 		</div>
 
-		<!--
-		<button class="button" onclick="resize()">Resize</button>
-	-->
-
 
 		<script>
-			function resize(){
-				console.log(screen.width);
-				console.log(screen.width/550);
-				var x = screen.width/3.5;
-				document.getElementById("startBoard").style.width = x + "px";
-				board.resize();
-				console.log("this");
-			}
-
 			function darkMode(){
 				var element = document.body;
 				element.classList.toggle("theme-switch");
