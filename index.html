@@ -3,6 +3,7 @@
 	<head>
 	  <meta charset="utf-8" />
 	  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	  <title>Chess Analysis</title>
 	  <link rel="icon" href="img/chesspieces/wikipedia/bK.png">
 	  <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css" integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU" crossorigin="anonymous">
@@ -101,20 +102,47 @@
 		  </div>
 		</div>
 
+		<div class="modal fade" id="howCloseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLongTitle">Incorrect</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		      	<p id="howCloseText"></p>
+		      </div>
+		      <div class="modal-footer">
+		      	<input type="checkbox" id="howCloseCheckbox" name="showCheckbox">
+		      	<label id="checkBoxText" for="showCheckbox">Don't show again</label>
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
 
-
-
-		<div id="startBoard"  style="width: 550px; margin: auto; padding: 1em"></div>
-		<div id="solveBoard" style="width: 550px; display: none; margin: auto"></div>
 
 		<div class="container">
-			<div class="text-center">
+		  <div class="row">
+		    <div class="col">
+		    </div>
+		    <div class="col-6">
+		      <div id="startBoard"  style="width: 100%; max-width: 100%;margin: auto; padding: 1em"></div>
+		      <div id="solveBoard" style="width: 75%; max-width: 100%; display: none; margin: auto"></div>
+		    </div>
+		    <div class="col h-100 justify-content-center align-items-center">
+		      <br><br><br><br><br><br><br><br>
+		      <div class="text-center">
 			  	<button id="startButton" class="button" style="margin: auto" onclick="runTimer()">Start</button>
 			  	<h1 id="timer" data-toggle="modal" data-target="#timerModal">01:00</h1>
 
 			  	<div id="solveDiv" style="display:none">
 			  		<button id="checkButton" class="button" onclick="checkAnswer()" style="display: inline">Check</button>
+			  		<br><br>
 			  		<button id="solutionButton" class="button" onclick="showSolution()" style="display: inline; pointer-events: none">See Solution</button>
+			  		<br><br>
 			  		<button id="resetButton" class="button" onclick="resetBoard()" style="display: inline">Reset</button>
 				</div>
 
@@ -129,15 +157,28 @@
 				  	<h1 style="display: inline" id="wrongText">0</h1>
 				</div>
 			</div>
+		    </div>
+		  </div>
 		</div>
+
+		<!--
+		<button class="button" onclick="resize()">Resize</button>
+	-->
 
 
 		<script>
+			function resize(){
+				console.log(screen.width);
+				console.log(screen.width/550);
+				var x = screen.width/3.5;
+				document.getElementById("startBoard").style.width = x + "px";
+				board.resize();
+				console.log("this");
+			}
+
 			function darkMode(){
 				var element = document.body;
 				element.classList.toggle("theme-switch");
-
-
 			}
 
 			const chess = new Chess();
@@ -213,6 +254,7 @@
 			var numCorrect = 0;
 			var numWrong = 0;
 			var numStreak = 0;
+			var numOff = 0;
 
 			var interval = 1000; // ms
 			var expected = Date.now() + interval;
@@ -297,6 +339,64 @@
 				}
 			}
 
+			function howClose(){
+				if(board.fen() === solutionBoard.fen()){
+					
+				}
+				else{
+					var correctArr = board.fen().split("/");
+					var guessArr = solutionBoard.fen().split("/");
+
+					console.log(correctArr);
+					console.log(guessArr);
+
+					for(var i = 0; i < correctArr.length; i++){
+						if(correctArr[i] === guessArr[i]){
+
+						}
+						else{
+							var correctStr = correctArr[i];
+							var guessStr = guessArr[i];
+
+							var correctPieceStr = "";
+							var guessPieceStr = "";
+
+							for(var j = 0; j < correctStr.length; j++){
+								var c = correctStr.charAt(j);
+								if(isNaN(c)){
+									correctPieceStr += c;
+								}
+
+								else{
+									for(var k = 0; k < c; k++){
+										correctPieceStr += "_";
+									}
+								}
+							}
+
+							for(var l = 0; l < guessStr.length; l++){
+								var c = guessStr.charAt(l);
+								if(isNaN(c)){
+									guessPieceStr += c;
+								}
+
+								else{
+									for(var m = 0; m < c; m++){
+										guessPieceStr += "_";
+									}
+								}
+							}
+
+							for(var n = 0; n < 8; n++){
+								if(!(guessPieceStr.charAt(n) === correctPieceStr.charAt(n))){
+									numOff++;
+								}
+							}
+						}
+					}
+				}
+			}
+
 			function checkAnswer(){
 				document.getElementById("solutionButton").style.pointerEvents = "auto";
 				document.getElementById("checkButton").style.pointerEvents = "none";
@@ -312,6 +412,12 @@
 					numStreak = 0;
 					document.getElementById("wrongText").innerHTML = numWrong;
 					document.getElementById("streakText").innerHTML = numStreak;
+					howClose();
+
+					if(!($("#howCloseCheckbox").is(":checked"))){
+						document.getElementById("howCloseText").innerHTML = "You were " + numOff + " pieces off.";
+						$('#howCloseModal').modal('toggle');
+					}
 				}
 			}
 
@@ -321,6 +427,7 @@
 			}
 
 			function resetBoard(){
+				numOff = 0;
 				board.clear();
 				solutionBoard.clear();
 				document.getElementById("startBoard").style.display= "block";
