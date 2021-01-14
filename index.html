@@ -41,7 +41,7 @@
 
 		<nav class="navbar sticky-top navbar-custom">
 			<ul>
-			  <!--<li><a href="#">Login</a></li>-->
+			  <!--<li><a href="" data-toggle="modal" data-target="#loginModal">Login</a></li>-->
 			  <li><a href="" data-toggle="modal" data-target="#instructionsModal">Instructions</a></li>
 			  <li><a href="#" onclick="darkMode()">Dark Mode</a></li>
 			</ul>
@@ -68,6 +68,40 @@
 		    </div>
 		  </div>
 		</div>
+
+		<!--
+
+		<div id="loginModal" class="modal fade">
+			<div class="modal-dialog modal-login">
+				<div class="modal-content">
+					<form action="/examples/actions/confirmation.php" method="post">
+						<div class="modal-header">				
+							<h4 class="modal-title">Login</h4>
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						</div>
+						<div class="modal-body">				
+							<div class="form-group">
+								<label>Username</label>
+								<input type="text" class="form-control" required="required" style="width: 80%">
+							</div>
+							<div class="form-group">
+								<div class="clearfix">
+									<label>Password</label>
+									<a href="#" class="float-right text-muted"><small style="color: var(--text)">Forgot?</small></a>
+								</div>
+								
+								<input type="password" class="form-control" required="required" style="width: 80%">
+							</div>
+						</div>
+						<div class="modal-footer justify-content-between">
+							<label class="form-check-label" style="color:black"><input type="checkbox"> Remember me</label>
+							<input type="submit" class="btn btn-primary" value="Login">
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>    
+		--> 
 
 		<div class="modal fade" id="timerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		  <div class="modal-dialog" role="document">
@@ -128,12 +162,12 @@
 		  <div class="row">
 		    <div class="col">
 		    </div>
-		    <div class="col-6">
+		    <div class="col-lg-6">
 		      <div id="startBoard"  style="width: 75%; max-width: 100%;margin: auto; padding: 1em"></div>
 		      <div id="solveBoard" style="width: 65%; max-width: 100%; display: none; margin: auto"></div>
 		    </div>
-		    <div class="col">
-		      <div class="text-center" style="padding-top: 60%">
+		    <div class="col-sm align-self-center">
+		      <div class="text-center">
 			  	<button id="startButton" class="button" style="margin: auto" onclick="runTimer()">Start</button>
 			  	<h1 id="timer" data-toggle="modal" data-target="#timerModal">01:00</h1>
 
