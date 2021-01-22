@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	  <meta charset="utf-8" />
+	  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	  <title>Chess Analysis</title>
+	  <link rel="icon" href="img/chesspieces/wikipedia/bK.png">
+	  <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css" integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU" crossorigin="anonymous">
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	  <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js" integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD" crossorigin="anonymous"></script>
+	  <script src="js/chess.js"></script>
+	  <script src="js/script.js"></script>
+	  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	  <link rel="stylesheet" href="css/style.css">
+
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" crossorigin="anonymous"></script>
+
+	  <!-- The core Firebase JS SDK is always required and must be listed first -->
+		<script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-auth.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-firestore.js"></script>
+
+		<!-- TODO: Add SDKs for Firebase products that you want to use
+		     https://firebase.google.com/docs/web/setup#available-libraries -->
+		<script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-analytics.js"></script>
+
+		<script>
+		  // Your web app's Firebase configuration
+		  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+		  var firebaseConfig = {
+		    apiKey: "AIzaSyCb2fJLCp_BKBmrxOlPws-C5AEsANFOtuA",
+		    authDomain: "chessanalysis-67912.firebaseapp.com",
+		    projectId: "chessanalysis-67912",
+		    storageBucket: "chessanalysis-67912.appspot.com",
+		    messagingSenderId: "642735496796",
+		    appId: "1:642735496796:web:ff384787fae13521d25099",
+		    measurementId: "G-TYESDK0LSH"
+		  };
+		  // Initialize Firebase
+		  firebase.initializeApp(firebaseConfig);
+		  firebase.analytics();
+		</script>
+		<script src="app.js" defer></script>
+	</head>
+
+	<body>
+		<style>
+			.container {
+			  height: 50px;
+			  position: relative;
+			  padding: 2em;
+			  margin-top: 2em;
+			}
+
+			.center {
+			  margin: 0;
+			  position: absolute;
+			  top: 50%;
+			  left: 50%;
+			  -ms-transform: translate(-50%, -50%);
+			  transform: translate(-50%, -50%);
+			}
+		</style>
+
+		<nav class="navbar sticky-top navbar-custom">
+			<ul>
+			  <!--<li><a href="" data-toggle="modal" data-target="#loginModal">Login</a></li>-->
+			  <li><a href="#" id="signInBtn" onclick="clickLogin()">Login</a></li>
+			  <li><a href="#" id="signOutBtn" style="display: none" onclick="clickLogout()">Logout</a></li>
+			  <li><a href="#" id="profile" data-toggle="modal" data-target="#profileModal" style="display: none">Profile</a></li>
+			  <li><a href="" data-toggle="modal" data-target="#instructionsModal">Instructions</a></li>
+			  <li><a href="#" onclick="darkMode()">Dark Mode</a></li>
+			</ul>
+		</nav>
+
+		<div class="modal fade" id="instructionsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLongTitle">Instructions</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		      	<p>1. Set your timer to your preferred duration.</p>
+		      	<p>2. Observe a random position for that duration.</p>
+		      	<p>3. Try to place the pieces back on the board to match the original position.</p>
+		      	<p>4. Repeat as much as you want, and go for a really high streak! Good luck!</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+		<div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+			  <div class="modal-content">
+				<div class="modal-header">
+				  <h5 class="modal-title" id="exampleModalLongTitle">Profile</h5>
+				  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				  </button>
+				</div>
+				<div class="modal-body" id="profileBody">
+					<canvas id="myChart" width="25%" height="25%"></canvas>
+					<p id="profileText" style="text-align: center;"></p>
+				</div>
+				<div class="modal-footer">
+				  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			  </div>
+			</div>
+		  </div>
+
+		
+
+		<div class="modal fade" id="timerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLabel">Timer</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <form>
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">Desired time (in seconds):</label>
+		            <textarea class="form-control" id="timerMessageText"></textarea>
+		          </div>
+		          <div class="form-group">
+		          	<label for="message-text" class="col-form-label">Quick Options:</label>
+		          	<button type="button" class="btn btn-primary" onclick="thirtyTimer()" data-dismiss="modal">00:30</button>
+		            <button type="button" class="btn btn-primary" onclick="sixtyTimer()" data-dismiss="modal">1:00</button>
+		            <button type="button" class="btn btn-primary" onclick="oneTwentyTimer()" data-dismiss="modal">2:00</button>
+		            <button type="button" class="btn btn-primary" onclick="threeHundredTimer()" data-dismiss="modal">5:00</button>
+		            <button type="button" class="btn btn-primary" onclick="sixHundredTimer()" data-dismiss="modal">10:00</button>
+		          </div>
+		        </form>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		        <button type="button" class="btn btn-primary" onclick="customSetTimer()" data-dismiss="modal">Set</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+		<div class="modal fade" id="howCloseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLongTitle">Incorrect</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		      	<p id="howCloseText"></p>
+		      </div>
+		      <div class="modal-footer">
+		      	<input type="checkbox" id="howCloseCheckbox" name="showCheckbox">
+		      	<label id="checkBoxText" for="showCheckbox">Don't show again</label>
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+
+		<div class="container-fluid">
+		  <div class="row">
+		    <div class="col">
+		    </div>
+		    <div class="col-lg-6">
+		      <div id="startBoard"  style="width: 75%; max-width: 100%;margin: auto; padding: 1em"></div>
+		      <div id="solveBoard" style="width: 65%; max-width: 100%; display: none; margin: auto"></div>
+		    </div>
+		    <div class="col-sm align-self-center">
+		      <div class="text-center">
+			  	<button id="startButton" class="button" style="margin: auto" onclick="runTimer()">Start</button>
+			  	<h1 id="timer" data-toggle="modal" data-target="#timerModal">01:00</h1>
+
+			  	<div id="solveDiv" style="display:none">
+			  		<button id="checkButton" class="button" onclick="checkAnswer()" style="display: inline">Check</button>
+			  		<br><br>
+			  		<button id="solutionButton" class="button" onclick="showSolution()" style="display: inline; pointer-events: none">See Solution</button>
+			  		<br><br>
+			  		<button id="resetButton" class="button" onclick="resetBoard()" style="display: inline">Reset</button>
+				</div>
+
+				<div>
+					<i id="streakIcon" class="fas fa-fire"></i>
+					<h1 style="display: inline" id="streakText">0</h1>
+					<i class="fas fa-grip-lines-vertical"></i>
+				  	<i id="correctIcon" class="fas fa-check-circle"></i>
+				  	<h1 style="display: inline" id="correctText">0</h1>
+				  	<i class="fas fa-grip-lines-vertical"></i>
+				  	<i id="wrongIcon" class="fas fa-times-circle"></i>
+				  	<h1 style="display: inline" id="wrongText">0</h1>
+				</div>
+			</div>
+		    </div>
+		  </div>
+		</div>
+	</body>
+</html>
