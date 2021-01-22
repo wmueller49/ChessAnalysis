@@ -35,6 +35,10 @@ function checkAnswer(){
         document.getElementById("correctText").innerHTML = numCorrect;
         document.getElementById("streakText").innerHTML = numStreak;
 
+        if(numStreak > highestStreak){
+            highestStreak = numStreak;
+        }
+
         if(firebase.auth().currentUser){
             thingsRef = db.collection('users');
 
